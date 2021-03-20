@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SubwayRandomSandwich</string>
+    <string name="make">만들기</string>
+    <string name="menu">메뉴 :</string>
+    <string name="bread">빵 :</string>
+    <string name="cheese">치즈 :</string>
+    <string name="sauce">소스 :</string>
+    <string name="gohome">처음으로</string>
+</resources>
