@@ -1,11 +1,14 @@
 package kr.hs.emirim.s2019s09.subwayrandomsandwich
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import java.util.Random
 
 class SandwichResult : AppCompatActivity() {
@@ -19,11 +22,11 @@ class SandwichResult : AppCompatActivity() {
     var menuArray = arrayOf<Menu>(
         Menu("로스트 치킨", "오븐에 구워 담백한 저칼로리 닭가슴살의 건강한 풍미", 233, 320, 8, 23, 2, 610, "roasted_chicken"),
         Menu("에그마요", "부드러운 달걀과 고소한 마요네즈가 만나 더 부드러운 스테디셀러", 247, 480, 7, 17, 5, 450, "egg_mayo"),
-        Menu("K-바비큐", "써브웨이 최초의 코르안 스타일 샌드위치!\n마늘, 간장 그리고 은은한 불맛까지!", 254, 378, 12, 24, 2, 907, "k_bbq"),
-        Menu("쉬림프", "탱글한 식감이 그대로 살아있는 통새우가 5마리 들어가 한닙 베어 먹을 때마다 진짜 새우의 풍미가 가득", 187, 253, 5, 12, 1, 355, "shrimp"),
+        Menu("K-바비큐", "써브웨이 최초의 코르안 스타일 샌드위치! 마늘, 간장 그리고 은은한 불맛까지!", 254, 378, 12, 24, 2, 907, "k_bbq"),
+        Menu("쉬림프", "탱글한 식감의 통새우가 들어가 한입 베어 먹을 때마다 진짜 새우의 풍미가 가득", 187, 253, 5, 12, 1, 355, "shrimp"),
         Menu("로티세리 바비큐 치킨", "촉촉한 바비큐 치킨의 풍미가득. 손으로 찢어 더욱 부드러운 치킨의 혁명", 247, 350, 7, 29, 2, 660, "rotisserie_barbecue_chicken"),
         Menu("풀드 포크 바비큐", "훈연한 미국 스타일의 풀드 포크 바비큐가 가득 들어간 샌드위치", 276, 420, 24, 23, 2, 980, "pulled_pork"),
-        Menu("이탈리안 비엠티", "페퍼로니, 살라미, 그리고 햄이 만들어내는 최상의 조화!\n전세계가 사랑하는 써브웨이의 베스트셀러!", 226, 410, 8, 20, 6, 1260, "italian_bmt"),
+        Menu("이탈리안 비엠티", "페퍼로니, 살라미, 그리고 햄이 만들어내는 최상의 조화!", 226, 410, 8, 20, 6, 1260, "italian_bmt"),
         Menu("비엘티", "오리지널 아메리칸 스타일 베이컨의 풍미와 바삭함 그대로", 165, 380, 7, 20, 5, 1130, "blt"),
         Menu("미트볼", "이탈리안 스타일 비프 미트볼에 써브웨이만의 풍부한 토마토 향이 살아있는 마리나라소스를 듬뿍", 301, 480, 12, 21, 7, 1000, "meatball"),
         Menu("햄", "기본 중에 기본! 풍부한 햄이 만들어내는 입 안 가득 넘치는 맛의 향연", 219, 290, 8, 18, 1, 800, "ham"),
@@ -41,6 +44,7 @@ class SandwichResult : AppCompatActivity() {
     var cheeseArray = arrayOf<String>("아메리칸 치즈", "슈레드 치즈", "모차렐라 치즈")
     var sauceArray = arrayOf<String>("랜치", "마요네즈", "스위트 어니언", "허니 머스타드", "스위트 칠리", "핫 칠리", "사우스웨스트 치폴레", "머스타드", "홀스래디쉬", "올리브 오일", "레드와인식초", "스모크 바비큐")
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sandwich_result)
@@ -49,7 +53,11 @@ class SandwichResult : AppCompatActivity() {
         val menu_num = random.nextInt(menuArray.size)
         val bread_num = random.nextInt(breadArray.size)
         val cheese_num = random.nextInt(cheeseArray.size)
-        val sauce_num = random.nextInt(sauceArray.size)
+        val sauce_num1 = random.nextInt(sauceArray.size)
+        var sauce_num2 = random.nextInt(sauceArray.size)
+        while (sauce_num1 == sauce_num2) {
+            sauce_num2 = random.nextInt(sauceArray.size)
+        }
 
         img = findViewById(R.id.sandwichImg)
         info = findViewById(R.id.infotext)
@@ -59,15 +67,26 @@ class SandwichResult : AppCompatActivity() {
         sauce = findViewById(R.id.saucetext)
 
         img.setImageResource(resources.getIdentifier("@drawable/" + menuArray.get(menu_num).img, "drawable", packageName))
+        menu.text = menuArray.get(menu_num).name
         info.text = menuArray.get(menu_num).info
-        menu.text = "메뉴 : " + menuArray.get(menu_num).name
         bread.text = "빵 : " + breadArray.get(bread_num)
         cheese.text = "치즈 : " + cheeseArray.get(cheese_num)
-        sauce.text = "소스 : " + sauceArray.get(sauce_num)
+        sauce.text = "소스 : " + sauceArray.get(sauce_num1) + ", " + sauceArray.get(sauce_num2)
 
         findViewById<Button>(R.id.home).setOnClickListener {
             val intent : Intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+        findViewById<Button>(R.id.nutrient_btn).setOnClickListener {
+            var dlg = AlertDialog.Builder(this)
+                .setTitle("영양성분표")
+                .setMessage("중량(g) : " + menuArray.get(menu_num).weigth
+                        + "\n열량(kacl) : " + menuArray.get(menu_num).calorie
+                        + "\n당류(g) : " + menuArray.get(menu_num).sugars
+                        + "\n단백질(g) : " + menuArray.get(menu_num).protein
+                        + "\n포화지방(g) : " + menuArray.get(menu_num).fat
+                        + "\n나트륨(mg) : " + menuArray.get(menu_num).salt)
+                .show()
         }
     }
 }
